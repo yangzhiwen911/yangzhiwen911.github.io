@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Linux LVM 磁盘扩容 | 叶良辰の学习笔记</title>
+    <meta name="description" content="万物之始,大道至简,衍化至繁">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.min.css">
+    
+    <link rel="preload" href="/assets/css/0.styles.94a75534.css" as="style"><link rel="preload" href="/assets/js/app.8595a84a.js" as="script"><link rel="preload" href="/assets/js/2.43ea25e1.js" as="script"><link rel="preload" href="/assets/js/47.a520ca5c.js" as="script"><link rel="prefetch" href="/assets/js/10.06e5eb14.js"><link rel="prefetch" href="/assets/js/100.31901176.js"><link rel="prefetch" href="/assets/js/101.ded6a7c2.js"><link rel="prefetch" href="/assets/js/102.8c41fe6e.js"><link rel="prefetch" href="/assets/js/103.fd055c57.js"><link rel="prefetch" href="/assets/js/104.c2912d2f.js"><link rel="prefetch" href="/assets/js/105.cb7a5631.js"><link rel="prefetch" href="/assets/js/106.5ab6db1d.js"><link rel="prefetch" href="/assets/js/107.b2479aa0.js"><link rel="prefetch" href="/assets/js/108.f6f20e89.js"><link rel="prefetch" href="/assets/js/109.e31b7441.js"><link rel="prefetch" href="/assets/js/11.f086bb6e.js"><link rel="prefetch" href="/assets/js/110.b3c1c320.js"><link rel="prefetch" href="/assets/js/111.6bc1ba48.js"><link rel="prefetch" href="/assets/js/112.aaf73c2c.js"><link rel="prefetch" href="/assets/js/113.bbc02c2b.js"><link rel="prefetch" href="/assets/js/114.fd4aac87.js"><link rel="prefetch" href="/assets/js/115.a3cd54c2.js"><link rel="prefetch" href="/assets/js/116.21a147a9.js"><link rel="prefetch" href="/assets/js/117.959f6d38.js"><link rel="prefetch" href="/assets/js/118.bccc0c41.js"><link rel="prefetch" href="/assets/js/119.f774debc.js"><link rel="prefetch" href="/assets/js/12.578f8496.js"><link rel="prefetch" href="/assets/js/120.84f1ed9b.js"><link rel="prefetch" href="/assets/js/121.90ef0752.js"><link rel="prefetch" href="/assets/js/122.3a4d8cd7.js"><link rel="prefetch" href="/assets/js/123.4d9a5cbf.js"><link rel="prefetch" href="/assets/js/124.83bad0ab.js"><link rel="prefetch" href="/assets/js/125.bbe455b0.js"><link rel="prefetch" href="/assets/js/126.1977c201.js"><link rel="prefetch" href="/assets/js/127.cccee27c.js"><link rel="prefetch" href="/assets/js/128.ad9031a7.js"><link rel="prefetch" href="/assets/js/129.5f46be27.js"><link rel="prefetch" href="/assets/js/13.f4e25669.js"><link rel="prefetch" href="/assets/js/130.b8d3df87.js"><link rel="prefetch" href="/assets/js/131.367e4e63.js"><link rel="prefetch" href="/assets/js/132.91dec612.js"><link rel="prefetch" href="/assets/js/133.f550ada4.js"><link rel="prefetch" href="/assets/js/134.b5f777e1.js"><link rel="prefetch" href="/assets/js/135.77c69367.js"><link rel="prefetch" href="/assets/js/136.e498ba84.js"><link rel="prefetch" href="/assets/js/137.fc3751d8.js"><link rel="prefetch" href="/assets/js/138.8bba551f.js"><link rel="prefetch" href="/assets/js/139.3c70edb9.js"><link rel="prefetch" href="/assets/js/14.be534530.js"><link rel="prefetch" href="/assets/js/140.5505027f.js"><link rel="prefetch" href="/assets/js/141.0afcfd78.js"><link rel="prefetch" href="/assets/js/142.6ab0accb.js"><link rel="prefetch" href="/assets/js/143.d4c9a677.js"><link rel="prefetch" href="/assets/js/144.ef861a7b.js"><link rel="prefetch" href="/assets/js/145.098367bf.js"><link rel="prefetch" href="/assets/js/146.76222e89.js"><link rel="prefetch" href="/assets/js/147.674e9f71.js"><link rel="prefetch" href="/assets/js/148.555c3ed1.js"><link rel="prefetch" href="/assets/js/149.603f6336.js"><link rel="prefetch" href="/assets/js/15.2e485db6.js"><link rel="prefetch" href="/assets/js/150.76507a6a.js"><link rel="prefetch" href="/assets/js/151.59914096.js"><link rel="prefetch" href="/assets/js/152.ccc3e17c.js"><link rel="prefetch" href="/assets/js/153.e69220a8.js"><link rel="prefetch" href="/assets/js/154.fa22c457.js"><link rel="prefetch" href="/assets/js/155.d499ebb6.js"><link rel="prefetch" href="/assets/js/156.bfe40f62.js"><link rel="prefetch" href="/assets/js/157.bb6fc26c.js"><link rel="prefetch" href="/assets/js/158.c8914f45.js"><link rel="prefetch" href="/assets/js/159.bf52f2be.js"><link rel="prefetch" href="/assets/js/16.89f347f8.js"><link rel="prefetch" href="/assets/js/160.6963ee21.js"><link rel="prefetch" href="/assets/js/161.7791c848.js"><link rel="prefetch" href="/assets/js/162.11fe42ce.js"><link rel="prefetch" href="/assets/js/163.0c66bf87.js"><link rel="prefetch" href="/assets/js/164.a30af3f1.js"><link rel="prefetch" href="/assets/js/165.a2dd7427.js"><link rel="prefetch" href="/assets/js/166.46a29a8a.js"><link rel="prefetch" href="/assets/js/17.65a12e6d.js"><link rel="prefetch" href="/assets/js/18.861a0d7e.js"><link rel="prefetch" href="/assets/js/19.3052a24b.js"><link rel="prefetch" href="/assets/js/20.3cd0460e.js"><link rel="prefetch" href="/assets/js/21.986dcc58.js"><link rel="prefetch" href="/assets/js/22.fd63bbf4.js"><link rel="prefetch" href="/assets/js/23.56bfca5f.js"><link rel="prefetch" href="/assets/js/24.4973ba94.js"><link rel="prefetch" href="/assets/js/25.c6f0fdbf.js"><link rel="prefetch" href="/assets/js/26.0dcc4c64.js"><link rel="prefetch" href="/assets/js/27.cfca1ea4.js"><link rel="prefetch" href="/assets/js/28.cf552542.js"><link rel="prefetch" href="/assets/js/29.8a5d5ce1.js"><link rel="prefetch" href="/assets/js/3.218b5a9f.js"><link rel="prefetch" href="/assets/js/30.85595d28.js"><link rel="prefetch" href="/assets/js/31.c0be8130.js"><link rel="prefetch" href="/assets/js/32.f409392c.js"><link rel="prefetch" href="/assets/js/33.81c88a0f.js"><link rel="prefetch" href="/assets/js/34.44ecbb62.js"><link rel="prefetch" href="/assets/js/35.06b5bce5.js"><link rel="prefetch" href="/assets/js/36.4346d5b2.js"><link rel="prefetch" href="/assets/js/37.2ba34693.js"><link rel="prefetch" href="/assets/js/38.1e082286.js"><link rel="prefetch" href="/assets/js/39.05459d0a.js"><link rel="prefetch" href="/assets/js/4.2004d87a.js"><link rel="prefetch" href="/assets/js/40.fcfa58b7.js"><link rel="prefetch" href="/assets/js/41.a1291a3d.js"><link rel="prefetch" href="/assets/js/42.287bafa4.js"><link rel="prefetch" href="/assets/js/43.88f41841.js"><link rel="prefetch" href="/assets/js/44.d1169d63.js"><link rel="prefetch" href="/assets/js/45.a7202327.js"><link rel="prefetch" href="/assets/js/46.9e4df0d0.js"><link rel="prefetch" href="/assets/js/48.990f1f9e.js"><link rel="prefetch" href="/assets/js/49.7af63144.js"><link rel="prefetch" href="/assets/js/5.08335bf0.js"><link rel="prefetch" href="/assets/js/50.f884fe7f.js"><link rel="prefetch" href="/assets/js/51.3cf6385a.js"><link rel="prefetch" href="/assets/js/52.2267e0fa.js"><link rel="prefetch" href="/assets/js/53.8928f89b.js"><link rel="prefetch" href="/assets/js/54.eec6f98b.js"><link rel="prefetch" href="/assets/js/55.8b8d18bf.js"><link rel="prefetch" href="/assets/js/56.a53e3fb0.js"><link rel="prefetch" href="/assets/js/57.9b8eb89e.js"><link rel="prefetch" href="/assets/js/58.71412cdb.js"><link rel="prefetch" href="/assets/js/59.47a6026a.js"><link rel="prefetch" href="/assets/js/6.dc32c23c.js"><link rel="prefetch" href="/assets/js/60.b445584e.js"><link rel="prefetch" href="/assets/js/61.92801308.js"><link rel="prefetch" href="/assets/js/62.0052829c.js"><link rel="prefetch" href="/assets/js/63.2521b7a9.js"><link rel="prefetch" href="/assets/js/64.6b9340b0.js"><link rel="prefetch" href="/assets/js/65.15dad725.js"><link rel="prefetch" href="/assets/js/66.ffb8e48f.js"><link rel="prefetch" href="/assets/js/67.723c5735.js"><link rel="prefetch" href="/assets/js/68.9764e00f.js"><link rel="prefetch" href="/assets/js/69.8ca37e49.js"><link rel="prefetch" href="/assets/js/7.6daaeea3.js"><link rel="prefetch" href="/assets/js/70.e42cb6da.js"><link rel="prefetch" href="/assets/js/71.409dee48.js"><link rel="prefetch" href="/assets/js/72.1ab12912.js"><link rel="prefetch" href="/assets/js/73.676fc788.js"><link rel="prefetch" href="/assets/js/74.92685b53.js"><link rel="prefetch" href="/assets/js/75.d522dd9a.js"><link rel="prefetch" href="/assets/js/76.c7b2b720.js"><link rel="prefetch" href="/assets/js/77.80df0aad.js"><link rel="prefetch" href="/assets/js/78.5fd278de.js"><link rel="prefetch" href="/assets/js/79.12c04eac.js"><link rel="prefetch" href="/assets/js/8.78bd4808.js"><link rel="prefetch" href="/assets/js/80.80a39d61.js"><link rel="prefetch" href="/assets/js/81.712b2fa8.js"><link rel="prefetch" href="/assets/js/82.e5cd6f26.js"><link rel="prefetch" href="/assets/js/83.42470a99.js"><link rel="prefetch" href="/assets/js/84.a6f17fa7.js"><link rel="prefetch" href="/assets/js/85.e35c6c1d.js"><link rel="prefetch" href="/assets/js/86.5ffa764c.js"><link rel="prefetch" href="/assets/js/87.adf840fb.js"><link rel="prefetch" href="/assets/js/88.2da0bac7.js"><link rel="prefetch" href="/assets/js/89.e816d413.js"><link rel="prefetch" href="/assets/js/9.f15b212e.js"><link rel="prefetch" href="/assets/js/90.b67499e3.js"><link rel="prefetch" href="/assets/js/91.70c4935e.js"><link rel="prefetch" href="/assets/js/92.49396136.js"><link rel="prefetch" href="/assets/js/93.5955e6ff.js"><link rel="prefetch" href="/assets/js/94.f2b5d6fa.js"><link rel="prefetch" href="/assets/js/95.639406b9.js"><link rel="prefetch" href="/assets/js/96.e3b8d160.js"><link rel="prefetch" href="/assets/js/97.68521a26.js"><link rel="prefetch" href="/assets/js/98.8a5369cc.js"><link rel="prefetch" href="/assets/js/99.9884a676.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.94a75534.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">叶良辰の学习笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/zh/guide/" class="nav-link">学习笔记</a></div><div class="nav-item"><a href="/zh/spring/" class="nav-link">源码笔记</a></div><div class="nav-item"><a href="/zh/ludi/" class="nav-link">微服务笔记</a></div><div class="nav-item"><a href="/zh/interview/" class="nav-link">Java面试题</a></div><div class="nav-item"><a href="/zh/write/" class="nav-link">手写框架</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title">学习文档</span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>分布式应用</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://nacos.io/zh-cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Nacos
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://github.com/alibaba/Sentinel" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Sentinel
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://gitee.com/mirrors/Spring-Cloud-Alibaba" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SpringCloud Alibaba
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.elasticsearch.cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  ElasticSearch
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://skywalking.apache.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SkyWalking
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.keycloak.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Keycloak
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.sonarqube.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SonarQube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>分布式事务</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://github.com/seata/seata" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Seata
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.txlcn.org/zh-cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  TX-LCN
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.xuxueli.com/xxl-job/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  XXL-JOB
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>分布式数据库</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ludi/Linux/ https://pingcap.com/docs-cn/" class="nav-link">TiDB</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title">在线工具</span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>在线编辑</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://cron.qqe2.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  CRON 表达式
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.diffchecker.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Diffchecker 比较工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://smallpdf.com/cn" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  PDF&lt;互转&gt;Word
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.bejson.com/jsoneditoronline" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  JSON在线编辑
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.processon.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Processon在线画图
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.i2symbol.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  在线符号大全
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://tableconvert.com/?output=text" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  markdown表格生成
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.toyaml.com/index.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  YAML&lt;互转&gt;Properties
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线答题</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://leetcode-cn.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  力扣
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.nowcoder.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  牛客
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.lintcode.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LintCode
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线翻译</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://fanyi.youdao.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  有道翻译
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://translate.google.cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  谷歌翻译
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线转POJO</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://java.bejson.com/generator/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SQL自动生成POJO
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.bejson.com/json2javapojo/new/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  JSON自动生成POJO
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线验签</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://qy.weixin.qq.com/cgi-bin/debug" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信企业号接口调试工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=20_1" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信支付接口签名校验工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://mp.weixin.qq.com/debug" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信公众平台接口调试工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://pay.weixin.qq.com/wiki/tools/signverify/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信公众平台支付接口调试
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://docs.open.alipay.com/399" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  支付宝开发商文档
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://wiki.open.qq.com/wiki/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  腾讯开放平台
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li></ul></div></div><div class="nav-item"><a href="/zh/aboutme.html" class="nav-link">关于我</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/zh/guide/" class="nav-link">学习笔记</a></div><div class="nav-item"><a href="/zh/spring/" class="nav-link">源码笔记</a></div><div class="nav-item"><a href="/zh/ludi/" class="nav-link">微服务笔记</a></div><div class="nav-item"><a href="/zh/interview/" class="nav-link">Java面试题</a></div><div class="nav-item"><a href="/zh/write/" class="nav-link">手写框架</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title">学习文档</span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>分布式应用</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://nacos.io/zh-cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Nacos
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://github.com/alibaba/Sentinel" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Sentinel
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://gitee.com/mirrors/Spring-Cloud-Alibaba" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SpringCloud Alibaba
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.elasticsearch.cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  ElasticSearch
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://skywalking.apache.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SkyWalking
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.keycloak.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Keycloak
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.sonarqube.org/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SonarQube
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>分布式事务</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://github.com/seata/seata" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Seata
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.txlcn.org/zh-cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  TX-LCN
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.xuxueli.com/xxl-job/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  XXL-JOB
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>分布式数据库</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ludi/Linux/ https://pingcap.com/docs-cn/" class="nav-link">TiDB</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title">在线工具</span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>在线编辑</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://cron.qqe2.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  CRON 表达式
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.diffchecker.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Diffchecker 比较工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://smallpdf.com/cn" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  PDF&lt;互转&gt;Word
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.bejson.com/jsoneditoronline" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  JSON在线编辑
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.processon.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Processon在线画图
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.i2symbol.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  在线符号大全
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://tableconvert.com/?output=text" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  markdown表格生成
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.toyaml.com/index.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  YAML&lt;互转&gt;Properties
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线答题</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://leetcode-cn.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  力扣
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.nowcoder.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  牛客
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://www.lintcode.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  LintCode
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线翻译</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://fanyi.youdao.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  有道翻译
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://translate.google.cn/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  谷歌翻译
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线转POJO</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="http://java.bejson.com/generator/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  SQL自动生成POJO
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="http://www.bejson.com/json2javapojo/new/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  JSON自动生成POJO
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li><li class="dropdown-item"><h4>在线验签</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://qy.weixin.qq.com/cgi-bin/debug" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信企业号接口调试工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=20_1" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信支付接口签名校验工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://mp.weixin.qq.com/debug" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信公众平台接口调试工具
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://pay.weixin.qq.com/wiki/tools/signverify/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  微信公众平台支付接口调试
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://docs.open.alipay.com/399" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  支付宝开发商文档
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-subitem"><a href="https://wiki.open.qq.com/wiki/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  腾讯开放平台
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></li></ul></div></div><div class="nav-item"><a href="/zh/aboutme.html" class="nav-link">关于我</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Linux</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/ludi/Linux/" class="sidebar-link">Linux 简介</a></li><li><a href="/ludi/Linux/009.[李卫民]分布式系统架构工程师-Linux-远程控制管理.html" class="sidebar-link">Linux 远程控制管理</a></li><li><a href="/ludi/Linux/010.[李卫民]分布式系统架构工程师-Linux-目录管理.html" class="sidebar-link">Linux 目录管理</a></li><li><a href="/ludi/Linux/011.[李卫民]分布式系统架构工程师-Linux-系统管理.html" class="sidebar-link">Linux 系统管理</a></li><li><a href="/ludi/Linux/012.[李卫民]分布式系统架构工程师-Linux-Vim 编辑器.html" class="sidebar-link">Linux Vim 编辑器</a></li><li><a href="/ludi/Linux/013.[李卫民]分布式系统架构工程师-Linux-用户和组管理.html" class="sidebar-link">Linux 用户和组管理</a></li><li><a href="/ludi/Linux/014.[李卫民]分布式系统架构工程师-Linux-文件权限管理.html" class="sidebar-link">Linux 文件权限管理</a></li><li><a href="/ludi/Linux/015.[李卫民]分布式系统架构工程师-Linux-软件包管理.html" class="sidebar-link">Linux 软件包管理</a></li><li><a href="/ludi/Linux/016.[李卫民]分布式系统架构工程师-Linux-部署应用程序.html" class="sidebar-link">Linux 部署应用程序</a></li><li><a href="/ludi/Linux/017.[李卫民]分布式系统架构工程师-Linux-LVM 磁盘扩容.html" class="active sidebar-link">Linux LVM 磁盘扩容</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/ludi/Linux/017.[李卫民]分布式系统架构工程师-Linux-LVM 磁盘扩容.html#lvm-的基本概念" class="sidebar-link">LVM 的基本概念</a></li><li class="sidebar-sub-header"><a href="/ludi/Linux/017.[李卫民]分布式系统架构工程师-Linux-LVM 磁盘扩容.html#磁盘操作相关命令" class="sidebar-link">磁盘操作相关命令</a></li><li class="sidebar-sub-header"><a href="/ludi/Linux/017.[李卫民]分布式系统架构工程师-Linux-LVM 磁盘扩容.html#开始-lvm-扩容" class="sidebar-link">开始 LVM 扩容</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="linux-lvm-磁盘扩容"><a href="#linux-lvm-磁盘扩容" class="header-anchor">#</a> Linux LVM 磁盘扩容</h1> <h2 id="lvm-的基本概念"><a href="#lvm-的基本概念" class="header-anchor">#</a> LVM 的基本概念</h2> <ul><li><strong>物理卷 Physical Volume (PV)：</strong> 可以在上面建立卷组的媒介，可以是硬盘分区，也可以是硬盘本身或者回环文件（loopback file）。物理卷包括一个特殊的 header，其余部分被切割为一块块物理区域（physical extents）</li> <li><strong>卷组 Volume group (VG)：</strong> 将一组物理卷收集为一个管理单元</li> <li><strong>逻辑卷 Logical volume (LV)：</strong> 虚拟分区，由物理区域（physical extents）组成</li> <li><strong>物理区域 Physical extent (PE)：</strong> 硬盘可供指派给逻辑卷的最小单位（通常为 4MB）</li></ul> <h2 id="磁盘操作相关命令"><a href="#磁盘操作相关命令" class="header-anchor">#</a> 磁盘操作相关命令</h2> <ul><li>查看挂载点</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">df</span> -h
+
+<span class="token comment"># 输出如下</span>
+Filesystem                         Size  Used Avail Use% Mounted on
+udev                               955M     <span class="token number">0</span>  955M   <span class="token number">0</span>% /dev
+tmpfs                              198M  <span class="token number">1</span>.8M  196M   <span class="token number">1</span>% /run
+<span class="token comment">## 此处为我们磁盘的挂载点</span>
+/dev/mapper/ubuntu--vg-ubuntu--lv   19G  <span class="token number">6</span>.0G   12G  <span class="token number">35</span>% /
+tmpfs                              986M     <span class="token number">0</span>  986M   <span class="token number">0</span>% /dev/shm
+tmpfs                              <span class="token number">5</span>.0M     <span class="token number">0</span>  <span class="token number">5</span>.0M   <span class="token number">0</span>% /run/lock
+tmpfs                              986M     <span class="token number">0</span>  986M   <span class="token number">0</span>% /sys/fs/cgroup
+/dev/loop1                          91M   91M     <span class="token number">0</span> <span class="token number">100</span>% /snap/core/6350
+/dev/loop0                          89M   89M     <span class="token number">0</span> <span class="token number">100</span>% /snap/core/6964
+/dev/sda2                          976M  143M  767M  <span class="token number">16</span>% /boot
+</code></pre></div><ul><li>显示当前的 logical volume：<code>lvdisplay</code></li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>lvdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Logical volume ---
+LV Path                /dev/ubuntu-vg/ubuntu-lv
+LV Name                ubuntu-lv
+VG Name                ubuntu-vg
+LV UUID                e2fKkR-oZeH-WV2A-ltCi-P76v-N9yv-aUtIg1
+LV Write Access        read/write
+LV Creation host, <span class="token function">time</span> ubuntu-server, <span class="token number">2019</span>-05-14 03:13:57 +0800
+LV Status              available
+<span class="token comment"># open                 1</span>
+LV Size                <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+Current LE             <span class="token number">4863</span>
+Segments               <span class="token number">1</span>
+Allocation             inherit
+Read ahead sectors     auto
+- currently <span class="token builtin class-name">set</span> to     <span class="token number">256</span>
+Block device           <span class="token number">253</span>:0
+</code></pre></div><ul><li>显示当前的 volume group</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>vgdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Volume group ---
+VG Name               ubuntu-vg
+System ID             
+Format                lvm2
+Metadata Areas        <span class="token number">1</span>
+Metadata Sequence No  <span class="token number">2</span>
+VG Access             read/write
+VG Status             resizable
+MAX LV                <span class="token number">0</span>
+Cur LV                <span class="token number">1</span>
+Open LV               <span class="token number">1</span>
+Max PV                <span class="token number">0</span>
+Cur PV                <span class="token number">1</span>
+Act PV                <span class="token number">1</span>
+<span class="token comment">## 这里应该是你当前的可用空间大小，待扩容完毕，这里显示的应该是最终的大小</span>
+VG Size               <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+PE Size               <span class="token number">4.00</span> MiB
+Total PE              <span class="token number">4863</span>
+Alloc PE / Size       <span class="token number">4863</span> / <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+Free  PE / Size       <span class="token number">0</span> / <span class="token number">0</span>   
+VG UUID               dhI9ns-7lOI-pXf8-IOWL-F96N-JIYG-ZF6u82
+</code></pre></div><ul><li>显示当前的 physical volume</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>pvdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Physical volume ---
+PV Name               /dev/sda3
+VG Name               ubuntu-vg
+PV Size               <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB / not usable <span class="token number">0</span>   
+Allocatable           <span class="token function">yes</span> <span class="token punctuation">(</span>but full<span class="token punctuation">)</span>
+PE Size               <span class="token number">4.00</span> MiB
+Total PE              <span class="token number">4863</span>
+Free PE               <span class="token number">0</span>
+Allocated PE          <span class="token number">4863</span>
+PV UUID               TDFe2b-xsce-R8So-ldxR-ohcp-fx5J-n2JNOa
+</code></pre></div><h2 id="开始-lvm-扩容"><a href="#开始-lvm-扩容" class="header-anchor">#</a> 开始 LVM 扩容</h2> <h3 id="查看-fdisk"><a href="#查看-fdisk" class="header-anchor">#</a> 查看 fdisk</h3> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">fdisk</span> -l
+
+<span class="token comment"># 输出如下</span>
+Disk /dev/loop0: <span class="token number">88.4</span> MiB, <span class="token number">92733440</span> bytes, <span class="token number">181120</span> sectors
+Units: sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+I/O size <span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+
+Disk /dev/loop1: <span class="token number">91</span> MiB, <span class="token number">95408128</span> bytes, <span class="token number">186344</span> sectors
+Units: sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+I/O size <span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+
+Disk /dev/sda: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+Units: sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+I/O size <span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+Disklabel type: gpt
+Disk identifier: F96F20D7-1F28-4B03-87CF-4FA3E81FDE29
+
+Device       Start      End  Sectors Size Type
+/dev/sda1     <span class="token number">2048</span>     <span class="token number">4095</span>     <span class="token number">2048</span>   1M BIOS boot
+/dev/sda2     <span class="token number">4096</span>  <span class="token number">2101247</span>  <span class="token number">2097152</span>   1G Linux filesystem
+/dev/sda3  <span class="token number">2101248</span> <span class="token number">41940991</span> <span class="token number">39839744</span>  19G Linux filesystem
+
+Disk /dev/mapper/ubuntu--vg-ubuntu--lv: <span class="token number">19</span> GiB, <span class="token number">20396900352</span> bytes, <span class="token number">39837696</span> sectors
+Units: sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+I/O size <span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes
+</code></pre></div><h3 id="查看所有储存设备"><a href="#查看所有储存设备" class="header-anchor">#</a> 查看所有储存设备</h3> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">fdisk</span> -l <span class="token operator">|</span><span class="token function">grep</span> <span class="token string">'/dev'</span>
+
+<span class="token comment"># 输出如下</span>
+Disk /dev/loop0: <span class="token number">88.4</span> MiB, <span class="token number">92733440</span> bytes, <span class="token number">181120</span> sectors
+Disk /dev/loop1: <span class="token number">91</span> MiB, <span class="token number">95408128</span> bytes, <span class="token number">186344</span> sectors
+<span class="token comment">## 目前只有一块磁盘 sda</span>
+Disk /dev/sda: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+/dev/sda1     <span class="token number">2048</span>     <span class="token number">4095</span>     <span class="token number">2048</span>   1M BIOS boot
+/dev/sda2     <span class="token number">4096</span>  <span class="token number">2101247</span>  <span class="token number">2097152</span>   1G Linux filesystem
+/dev/sda3  <span class="token number">2101248</span> <span class="token number">41940991</span> <span class="token number">39839744</span>  19G Linux filesystem
+Disk /dev/mapper/ubuntu--vg-ubuntu--lv: <span class="token number">19</span> GiB, <span class="token number">20396900352</span> bytes, <span class="token number">39837696</span> sectors
+</code></pre></div><div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 在虚拟机中挂载多一块磁盘，再操作</span>
+<span class="token function">fdisk</span> -l <span class="token operator">|</span><span class="token function">grep</span> <span class="token string">'/dev'</span>
+
+<span class="token comment"># 输出如下</span>
+Disk /dev/loop0: <span class="token number">88.4</span> MiB, <span class="token number">92733440</span> bytes, <span class="token number">181120</span> sectors
+Disk /dev/loop1: <span class="token number">91</span> MiB, <span class="token number">95408128</span> bytes, <span class="token number">186344</span> sectors
+<span class="token comment">## 挂载的第一块磁盘 sda</span>
+Disk /dev/sda: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+/dev/sda1     <span class="token number">2048</span>     <span class="token number">4095</span>     <span class="token number">2048</span>   1M BIOS boot
+/dev/sda2     <span class="token number">4096</span>  <span class="token number">2101247</span>  <span class="token number">2097152</span>   1G Linux filesystem
+/dev/sda3  <span class="token number">2101248</span> <span class="token number">41940991</span> <span class="token number">39839744</span>  19G Linux filesystem
+<span class="token comment">## 挂载的第二块磁盘 sdb</span>
+Disk /dev/sdb: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+Disk /dev/mapper/ubuntu--vg-ubuntu--lv: <span class="token number">19</span> GiB, <span class="token number">20396900352</span> bytes, <span class="token number">39837696</span> sectors
+</code></pre></div><h3 id="创建-sdb-分区"><a href="#创建-sdb-分区" class="header-anchor">#</a> 创建 sdb 分区</h3> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">fdisk</span> /dev/sdb
+
+<span class="token comment"># 输出如下</span>
+Welcome to <span class="token function">fdisk</span> <span class="token punctuation">(</span>util-linux <span class="token number">2.31</span>.1<span class="token punctuation">)</span>.
+Changes will remain <span class="token keyword">in</span> memory only, <span class="token keyword">until</span> you decide to <span class="token function">write</span> them.
+Be careful before using the <span class="token function">write</span> command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x0de15f1d.
+
+<span class="token comment">## 在此处输入命令</span>
+<span class="token comment">## n：新建分区</span>
+<span class="token comment">## l: 选择逻辑分区，如果没有，则首先创建主分区（p），然后再添加逻辑分区（硬盘最多四个分区 P-P-P-P 或 P-P-P-E）</span>
+Command <span class="token punctuation">(</span>m <span class="token keyword">for</span> <span class="token builtin class-name">help</span><span class="token punctuation">)</span>: n
+Partition <span class="token builtin class-name">type</span>
+   p   primary <span class="token punctuation">(</span><span class="token number">0</span> primary, <span class="token number">0</span> extended, <span class="token number">4</span> <span class="token function">free</span><span class="token punctuation">)</span>
+   e   extended <span class="token punctuation">(</span>container <span class="token keyword">for</span> logical partitions<span class="token punctuation">)</span>
+Select <span class="token punctuation">(</span>default p<span class="token punctuation">)</span>:
+
+Using default response p.
+Partition number <span class="token punctuation">(</span><span class="token number">1</span>-4, default <span class="token number">1</span><span class="token punctuation">)</span>: 
+First sector <span class="token punctuation">(</span><span class="token number">2048</span>-41943039, default <span class="token number">2048</span><span class="token punctuation">)</span>: 
+Last sector, +sectors or +size<span class="token punctuation">{</span>K,M,G,T,P<span class="token punctuation">}</span> <span class="token punctuation">(</span><span class="token number">2048</span>-41943039, default <span class="token number">41943039</span><span class="token punctuation">)</span>: 
+
+Created a new partition <span class="token number">1</span> of <span class="token builtin class-name">type</span> <span class="token string">'Linux'</span> and of size <span class="token number">20</span> GiB.
+
+<span class="token comment">## 在此处输入命令</span>
+<span class="token comment">## w：写入磁盘</span>
+Command <span class="token punctuation">(</span>m <span class="token keyword">for</span> <span class="token builtin class-name">help</span><span class="token punctuation">)</span>: w
+The partition table has been altered.
+Calling ioctl<span class="token punctuation">(</span><span class="token punctuation">)</span> to re-read partition table.
+Syncing disks.
+</code></pre></div><h3 id="格式化磁盘"><a href="#格式化磁盘" class="header-anchor">#</a> 格式化磁盘</h3> <ul><li>查看分区</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">fdisk</span> -l <span class="token operator">|</span><span class="token function">grep</span> <span class="token string">'/dev'</span>
+
+<span class="token comment"># 输出如下</span>
+Disk /dev/loop0: <span class="token number">88.4</span> MiB, <span class="token number">92733440</span> bytes, <span class="token number">181120</span> sectors
+Disk /dev/loop1: <span class="token number">91</span> MiB, <span class="token number">95408128</span> bytes, <span class="token number">186344</span> sectors
+Disk /dev/sda: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+/dev/sda1     <span class="token number">2048</span>     <span class="token number">4095</span>     <span class="token number">2048</span>   1M BIOS boot
+/dev/sda2     <span class="token number">4096</span>  <span class="token number">2101247</span>  <span class="token number">2097152</span>   1G Linux filesystem
+/dev/sda3  <span class="token number">2101248</span> <span class="token number">41940991</span> <span class="token number">39839744</span>  19G Linux filesystem
+Disk /dev/sdb: <span class="token number">20</span> GiB, <span class="token number">21474836480</span> bytes, <span class="token number">41943040</span> sectors
+<span class="token comment">## 此时可以看见新创建的分区 /dev/sdb1</span>
+/dev/sdb1        <span class="token number">2048</span> <span class="token number">41943039</span> <span class="token number">41940992</span>  20G <span class="token number">83</span> Linux
+Disk /dev/mapper/ubuntu--vg-ubuntu--lv: <span class="token number">19</span> GiB, <span class="token number">20396900352</span> bytes, <span class="token number">39837696</span> sectors
+</code></pre></div><ul><li>格式化</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">mkfs</span> -t ext4 /dev/sdb1
+
+<span class="token comment"># 输出如下</span>
+<span class="token function">mke2fs</span> <span class="token number">1.44</span>.1 <span class="token punctuation">(</span><span class="token number">24</span>-Mar-2018<span class="token punctuation">)</span>
+Creating filesystem with <span class="token number">5242624</span> 4k blocks and <span class="token number">1310720</span> inodes
+Filesystem UUID: 6f11063f-c118-4099-90fc-2b083c181b23
+Superblock backups stored on blocks: 
+        <span class="token number">32768</span>, <span class="token number">98304</span>, <span class="token number">163840</span>, <span class="token number">229376</span>, <span class="token number">294912</span>, <span class="token number">819200</span>, <span class="token number">884736</span>, <span class="token number">1605632</span>, <span class="token number">2654208</span>, 
+        <span class="token number">4096000</span>
+
+Allocating group tables: <span class="token keyword">done</span>                            
+Writing inode tables: <span class="token keyword">done</span>                            
+Creating journal <span class="token punctuation">(</span><span class="token number">32768</span> blocks<span class="token punctuation">)</span>: <span class="token keyword">done</span>
+Writing superblocks and filesystem accounting information: <span class="token keyword">done</span>
+</code></pre></div><h3 id="创建-pv"><a href="#创建-pv" class="header-anchor">#</a> 创建 PV</h3> <div class="language-bash extra-class"><pre class="language-bash"><code>pvcreate /dev/sdb1
+
+<span class="token comment"># 输出如下</span>
+WARNING: ext4 signature detected on /dev/sdb1 at offset <span class="token number">1080</span>. Wipe it? <span class="token punctuation">[</span>y/n<span class="token punctuation">]</span>: y
+  Wiping ext4 signature on /dev/sdb1.
+  Physical volume <span class="token string">&quot;/dev/sdb1&quot;</span> successfully created.
+</code></pre></div><h3 id="查看卷组"><a href="#查看卷组" class="header-anchor">#</a> 查看卷组</h3> <div class="language-bash extra-class"><pre class="language-bash"><code>pvscan
+
+<span class="token comment"># 输出如下</span>
+PV /dev/sda3   VG ubuntu-vg       lvm2 <span class="token punctuation">[</span><span class="token operator">&lt;</span><span class="token number">19.00</span> GiB / <span class="token number">0</span>    free<span class="token punctuation">]</span>
+PV /dev/sdb1                      lvm2 <span class="token punctuation">[</span><span class="token operator">&lt;</span><span class="token number">20.00</span> GiB<span class="token punctuation">]</span>
+Total: <span class="token number">2</span> <span class="token punctuation">[</span><span class="token operator">&lt;</span><span class="token number">39.00</span> GiB<span class="token punctuation">]</span> / <span class="token keyword">in</span> use: <span class="token number">1</span> <span class="token punctuation">[</span><span class="token operator">&lt;</span><span class="token number">19.00</span> GiB<span class="token punctuation">]</span> / <span class="token keyword">in</span> no VG: <span class="token number">1</span> <span class="token punctuation">[</span><span class="token operator">&lt;</span><span class="token number">20.00</span> GiB<span class="token punctuation">]</span>
+</code></pre></div><h3 id="扩容-vg"><a href="#扩容-vg" class="header-anchor">#</a> 扩容 VG</h3> <ul><li>查看 VG</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>vgdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Volume group ---
+<span class="token comment">## 我们需要用到 VG Name</span>
+VG Name               ubuntu-vg
+System ID             
+Format                lvm2
+Metadata Areas        <span class="token number">1</span>
+Metadata Sequence No  <span class="token number">2</span>
+VG Access             read/write
+VG Status             resizable
+MAX LV                <span class="token number">0</span>
+Cur LV                <span class="token number">1</span>
+Open LV               <span class="token number">1</span>
+Max PV                <span class="token number">0</span>
+Cur PV                <span class="token number">1</span>
+Act PV                <span class="token number">1</span>
+VG Size               <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+PE Size               <span class="token number">4.00</span> MiB
+Total PE              <span class="token number">4863</span>
+Alloc PE / Size       <span class="token number">4863</span> / <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+Free  PE / Size       <span class="token number">0</span> / <span class="token number">0</span>   
+VG UUID               dhI9ns-7lOI-pXf8-IOWL-F96N-JIYG-ZF6u82
+</code></pre></div><ul><li>扩容 VG</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>vgextend ubuntu-vg /dev/sdb1
+
+<span class="token comment"># 输出如下</span>
+Volume group <span class="token string">&quot;ubuntu-vg&quot;</span> successfully extended
+</code></pre></div><h3 id="扩容-lv"><a href="#扩容-lv" class="header-anchor">#</a> 扩容 LV</h3> <ul><li>查看 VG</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>vgdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Volume group ---
+VG Name               ubuntu-vg
+System ID             
+Format                lvm2
+Metadata Areas        <span class="token number">2</span>
+Metadata Sequence No  <span class="token number">3</span>
+VG Access             read/write
+VG Status             resizable
+MAX LV                <span class="token number">0</span>
+Cur LV                <span class="token number">1</span>
+Open LV               <span class="token number">1</span>
+Max PV                <span class="token number">0</span>
+Cur PV                <span class="token number">2</span>
+Act PV                <span class="token number">2</span>
+VG Size               <span class="token number">38.99</span> GiB
+PE Size               <span class="token number">4.00</span> MiB
+Total PE              <span class="token number">9982</span>
+Alloc PE / Size       <span class="token number">4863</span> / <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+<span class="token comment">## 这里是可以扩容的大小</span>
+Free  PE / Size       <span class="token number">5119</span> / <span class="token operator">&lt;</span><span class="token number">20.00</span> GiB
+VG UUID               dhI9ns-7lOI-pXf8-IOWL-F96N-JIYG-ZF6u82
+</code></pre></div><ul><li>查看 LV</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>lvdisplay
+
+<span class="token comment"># 输出如下</span>
+--- Logical volume ---
+<span class="token comment">## 我们需要用到 LV Path</span>
+LV Path                /dev/ubuntu-vg/ubuntu-lv
+LV Name                ubuntu-lv
+VG Name                ubuntu-vg
+LV UUID                e2fKkR-oZeH-WV2A-ltCi-P76v-N9yv-aUtIg1
+LV Write Access        read/write
+LV Creation host, <span class="token function">time</span> ubuntu-server, <span class="token number">2019</span>-05-14 03:13:57 +0800
+LV Status              available
+<span class="token comment"># open                 1</span>
+LV Size                <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB
+Current LE             <span class="token number">4863</span>
+Segments               <span class="token number">1</span>
+Allocation             inherit
+Read ahead sectors     auto
+- currently <span class="token builtin class-name">set</span> to     <span class="token number">256</span>
+Block device           <span class="token number">253</span>:0
+</code></pre></div><ul><li>扩容 LV</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 按固定大小追加</span>
+lvextend -L +10G /dev/ubuntu-vg/ubuntu-lv
+
+<span class="token comment"># 按百分比追加</span>
+lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+
+<span class="token comment"># 输出如下</span>
+Size of logical volume ubuntu-vg/ubuntu-lv changed from <span class="token operator">&lt;</span><span class="token number">19.00</span> GiB <span class="token punctuation">(</span><span class="token number">4863</span> extents<span class="token punctuation">)</span> to <span class="token number">38.99</span> GiB <span class="token punctuation">(</span><span class="token number">9982</span> extents<span class="token punctuation">)</span>.
+Logical volume ubuntu-vg/ubuntu-lv successfully resized.
+</code></pre></div><ul><li>刷新分区</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>resize2fs /dev/ubuntu-vg/ubuntu-lv
+
+<span class="token comment"># 输出如下</span>
+Filesystem at /dev/ubuntu-vg/ubuntu-lv is mounted on /<span class="token punctuation">;</span> on-line resizing required
+old_desc_blocks <span class="token operator">=</span> <span class="token number">3</span>, new_desc_blocks <span class="token operator">=</span> <span class="token number">5</span>
+The filesystem on /dev/ubuntu-vg/ubuntu-lv is now <span class="token number">10221568</span> <span class="token punctuation">(</span>4k<span class="token punctuation">)</span> blocks long.
+</code></pre></div><ul><li>验证是否成功</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code>lvdisplay
+
+--- Logical volume ---
+LV Path                /dev/ubuntu-vg/ubuntu-lv
+LV Name                ubuntu-lv
+VG Name                ubuntu-vg
+LV UUID                e2fKkR-oZeH-WV2A-ltCi-P76v-N9yv-aUtIg1
+LV Write Access        read/write
+LV Creation host, <span class="token function">time</span> ubuntu-server, <span class="token number">2019</span>-05-14 03:13:57 +0800
+LV Status              available
+<span class="token comment"># open                 1</span>
+<span class="token comment">## 可以看到磁盘扩容成功了</span>
+LV Size                <span class="token number">38.99</span> GiB
+Current LE             <span class="token number">9982</span>
+Segments               <span class="token number">2</span>
+Allocation             inherit
+Read ahead sectors     auto
+- currently <span class="token builtin class-name">set</span> to     <span class="token number">256</span>
+Block device           <span class="token number">253</span>:0
+</code></pre></div><blockquote><p><strong>注意：</strong> 不要卸载扩容的磁盘，可能出现丢失数据或是系统无法启动</p></blockquote></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/ludi/Linux/016.[李卫民]分布式系统架构工程师-Linux-部署应用程序.html" class="prev">
+          Linux 部署应用程序
+        </a></span> <!----></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.8595a84a.js" defer></script><script src="/assets/js/2.43ea25e1.js" defer></script><script src="/assets/js/47.a520ca5c.js" defer></script>
+  </body>
+</html>
